@@ -16,9 +16,10 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
     }
     gene.variance <- CalcRowVariance(expression.matrix)
     names(gene.variance) <- rownames(expression.matrix)
-    sorted.gene.variance <- gene.variance[order(gene.variance, decreasing = TRUE)]
-    top.genes <- sorted.gene.variance[1:ngenes]
-    subset.matrix <- expression.matrix[names(top.genes), ]
+    # Filter by position, exclude NA variances
+    gene.order.variance <- order(gene.variance, decreasing = TRUE, na.last=NA)
+    nn <- min(ngenes, length(gene.order.variance))
+    subset.matrix <- expression.matrix[gene.order.variance[1:nn], ]
     return(subset.matrix)
 }
 
